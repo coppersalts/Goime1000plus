@@ -510,39 +510,34 @@ for (let i = 0; i < 1000; i++) {
 
 // Game functions
 function drawach(num, t) {
-	var _loc2_ = getX(num);
-	var _loc1_ = getY(num);
-	var _loc3_ = checkerboard(_loc2_,_loc1_);
+	const x = getX(num);
+	const y = getY(num);
+	const colorType = checkerboard(x,y);
 	achievementListBitmap
-		.rect(_loc2_ * 15, _loc1_ * 7, 15, 7)
-		.fill(getColor(t, _loc3_, 0));
+		.rect(x * 15, y * 7, 15, 7)
+		.fill(getColor(t, colorType, 0));
 	achievementListBitmap
-		.rect(_loc2_ * 15, _loc1_ * 7, 14, 6)
-		.fill(getColor(t, _loc3_, 1));
+		.rect(x * 15, y * 7, 14, 6)
+		.fill(getColor(t, colorType, 1));
 	num2 = num + 1;
-	drawnum(num2 % 10,_loc2_ * 15 + 11,_loc1_ * 7 + 1,getColor(t,_loc3_,2));
+	drawnum(num2 % 10,x * 15 + 11,y * 7 + 1,getColor(t,colorType,2));
 	if (num2 >= 10) {
-		drawnum(Math.floor(num2 / 10) % 10,_loc2_ * 15 + 7,_loc1_ * 7 + 1,getColor(t,_loc3_,2));
+		drawnum(Math.floor(num2 / 10) % 10,x * 15 + 7,y * 7 + 1,getColor(t,colorType,2));
 	}
 	if (num2 >= 100) {
-		drawnum(Math.floor(num2 / 100) % 10,_loc2_ * 15 + 3,_loc1_ * 7 + 1,getColor(t,_loc3_,2));
+		drawnum(Math.floor(num2 / 100) % 10,x * 15 + 3,y * 7 + 1,getColor(t,colorType,2));
 	}
 	if (num2 >= 1000) {
-		drawnum(1,_loc2_ * 15,_loc1_ * 7 + 1,getColor(t,_loc3_,2));
+		drawnum(1,x * 15,y * 7 + 1,getColor(t,colorType,2));
 	}
 }
 function drawnum(num, nx, ny, color) {
-	var _loc2_ = 0;
-	var _loc1_;
-	while (_loc2_ < 3) {
-		_loc1_ = 0;
-		while (_loc1_ < 5) {
-			if (numbers[num][_loc1_][_loc2_] == 1) {
-				 achievementListBitmap.rect(_loc2_ + nx, _loc1_ + ny, 1, 1).fill(color);
+	for (let x = 0; x < 3; x++) {
+		for (let y = 0; y < 5; y++) {
+			if (numbers[num][y][x] == 1) {
+				 achievementListBitmap.rect(x + nx, y + ny, 1, 1).fill(color);
 			}
-			_loc1_ = _loc1_ + 1;
 		}
-		_loc2_ = _loc2_ + 1;
 	}
 }
 function flushAchievementList() {
@@ -553,9 +548,9 @@ function flushAchievementList() {
 	achievementListBitmap.clear();
 }
 function drawbubble(num, bubble, yoffset, pointer) {
-	var _loc7_ = getX(num);
-	var _loc6_ = getY(num);
-	var _loc5_ = checkerboard(_loc7_,_loc6_);
+	const x = getX(num);
+	const y = getY(num);
+	const colorType = checkerboard(x,y);
 	const backing = bubble.getChildByLabel('backing')
 	backing.clear();
 	backing.moveTo((- bubblePointLength) * pointer,(- bubblePointWidth) / 2 + yoffset);
@@ -572,10 +567,10 @@ function drawbubble(num, bubble, yoffset, pointer) {
 		.quadraticCurveTo((- bubblePointLength) * pointer - bubbleBoxLength,(- bubbleBoxWidth) / 2 + yoffset,(- bubblePointLength) * pointer - bubbleBoxLength + bubbleRadius,(- bubbleBoxWidth) / 2 + yoffset)
 		.lineTo((- bubblePointLength) * pointer - bubbleRadius,(- bubbleBoxWidth) / 2 + yoffset)
 		.quadraticCurveTo((- bubblePointLength) * pointer,(- bubbleBoxWidth) / 2 + yoffset,(- bubblePointLength) * pointer,(- bubbleBoxWidth) / 2 + bubbleRadius + yoffset)
-		.fill(getColor(achievements[num],_loc5_,1));
+		.fill(getColor(achievements[num],colorType,1));
 	bubble.getChildByLabel('achNumText').text = num + 1 + '  ' + achievementNames[num];
 	bubble.getChildByLabel('achNumText').y = -bubbleBoxWidth / 2 + yoffset;
-	bubble.getChildByLabel('achNumText').style.fill = getColor(achievements[num],_loc5_,3);
+	bubble.getChildByLabel('achNumText').style.fill = getColor(achievements[num],colorType,3);
 	if (achievements[num]) {
 		bubble.getChildByLabel('descriptionText').text = achievementDescriptions[num];
 		bubble.getChildByLabel('descriptionText').y = -bubbleBoxWidth / 2 + yoffset + 23;
@@ -599,8 +594,7 @@ function getY(index) {
 	return Math.floor(index / 10);
 }
 function getColor(t, color, fillType) {
-	var _loc1_ = !t ? 0 : 1;
-	return colors[_loc1_][color][fillType];
+	return colors[!t ? 0 : 1][color][fillType];
 }
 function getYoffset(y) {
 	if (y < bubbleBoxWidth / 2) {
@@ -612,33 +606,32 @@ function getYoffset(y) {
 	return 0;
 }
 function getChunkX(num, camera, leng) {
-	var _loc1_ = Math.floor(camera / 250) + num;
-	if (_loc1_ < 0) {
-		_loc1_ += leng;
-	} else if (_loc1_ >= leng) {
-		_loc1_ -= leng;
+	let chunkX = Math.floor(camera / 250) + num;
+	if (chunkX < 0) {
+		chunkX += leng;
+	} else if (chunkX >= leng) {
+		chunkX -= leng;
 	}
-	return _loc1_;
+	return chunkX;
 }
 function getChunkY(num, camera, leng) {
-	var _loc1_ = Math.floor(camera / 250) + num;
-	return _loc1_;
+	return Math.floor(camera / 250) + num;
 }
 function makeSideInvisible(i) {
-	for (let _loc3_ = 0; _loc3_ < 4; _loc3_++) {
-		let _loc4_ = getChunkX(i, oldCameraX, mapWidth / 10);
-		let _loc2_ = getChunkY(_loc3_, oldCameraY, mapHeight / 10);
-		if (_loc2_ >= 0 && _loc2_ < mapHeight / 10) {
-			app.stage.getChildByLabel(`mapPiece${_loc4_},${_loc2_}`).visible = false;
+	for (let j = 0; j < 4; j++) {
+		const chunkX = getChunkX(i, oldCameraX, mapWidth / 10);
+		const chunkY = getChunkY(j, oldCameraY, mapHeight / 10);
+		if (chunkY >= 0 && chunkY < mapHeight / 10) {
+			app.stage.getChildByLabel(`mapPiece${chunkX},${chunkY}`).visible = false;
 		}
 	}
 }
 function makeTBInvisible(i) {
-	for (let _loc3_ = 0; _loc3_ < 4; _loc3_++) {
-		let _loc4_ = getChunkX(_loc3_, oldCameraX,mapWidth / 10);
-		let _loc2_ = getChunkY(i, oldCameraY, mapHeight / 10);
-		if (_loc2_ >= 0 && _loc2_ < mapHeight / 10) {
-			app.stage.getChildByLabel(`mapPiece${_loc4_},${_loc2_}`).visible = false;
+	for (let j = 0; j < 4; j++) {
+		const chunkX = getChunkX(j, oldCameraX,mapWidth / 10);
+		const chunkY = getChunkY(i, oldCameraY, mapHeight / 10);
+		if (chunkY >= 0 && chunkY < mapHeight / 10) {
+			app.stage.getChildByLabel(`mapPiece${chunkX},${chunkY}`).visible = false;
 		}
 	}
 }
@@ -653,54 +646,53 @@ function drawmap() {
 	if (getChunkY(0,cameraY,mapHeight / 10) < getChunkY(0,oldCameraY,mapHeight / 10)) {
 		makeTBInvisible(3);
 	}
-	for (let _loc5_ = 0; _loc5_ < 4; _loc5_++) {
-		for (let _loc3_ = 0; _loc3_ < 4; _loc3_++) {
-			let _loc4_ = getChunkX(_loc3_, cameraX, mapWidth / 10);
-			let _loc2_ = getChunkY(_loc5_, cameraY, mapHeight / 10);
-			if (_loc2_ >= 0 && _loc2_ < mapHeight / 10) {
-				const mapPiece = app.stage.getChildByLabel(`mapPiece${_loc4_},${_loc2_}`);
+	for (let y = 0; y < 4; y++) {
+		for (let x = 0; x < 4; x++) {
+			const chunkX = getChunkX(x, cameraX, mapWidth / 10);
+			const chunkY = getChunkY(y, cameraY, mapHeight / 10);
+			if (chunkY >= 0 && chunkY < mapHeight / 10) {
+				const mapPiece = app.stage.getChildByLabel(`mapPiece${chunkX},${chunkY}`);
 				mapPiece.visible = true;
-				mapPiece.x = -cameraX % 250 + _loc3_ * 250 + stageOffsetX;
-				mapPiece.y = -(cameraY + 25000) % 250 + _loc5_ * 250 + stageOffsetY;
+				mapPiece.x = -cameraX % 250 + x * 250 + stageOffsetX;
+				mapPiece.y = -(cameraY + 25000) % 250 + y * 250 + stageOffsetY;
 			}
 		}
 	}
 }
 function clearMap() {
-	for (let _loc3_ = 0; _loc3_ < mapHeight / 10; _loc3_++) {
-		for (let _loc2_ = 0; _loc2_ < mapWidth / 10; _loc2_++) {
-			app.stage.getChildByLabel(`mapPiece${_loc2_},${_loc3_}`).visible = false;
+	for (let y = 0; y < mapHeight / 10; y++) {
+		for (let x = 0; x < mapWidth / 10; x++) {
+			app.stage.getChildByLabel(`mapPiece${x},${y}`).visible = false;
 		}
 	}
 }
 function loopOver(x, minX, maxX) {
-	var _loc1_;
+	let newDist;
 	if (minX == 0) {
-		_loc1_ = x % maxX;
-		return _loc1_ >= 0 ? _loc1_ : _loc1_ + maxX;
+		newDist = x % maxX;
+		return newDist >= 0 ? newDist : newDist + maxX;
 	}
-	var _loc5_ = x - minX;
-	var _loc3_ = maxX - minX;
-	_loc1_ = _loc5_ % _loc3_;
-	_loc1_ = looped >= 0 ? _loc1_ : _loc1_ + _loc3_;
-	return _loc1_ + minX;
+	const dist = x - minX;
+	const width = maxX - minX;
+	newDist = dist % width;
+	newDist = looped >= 0 ? newDist : newDist + width;
+	return newDist + minX;
 }
 function blockAt(x, y) {
-	var _loc1_ = Math.floor(y / 25);
-	if (_loc1_ < 0 || _loc1_ >= mapHeight) {
+	const tileY = Math.floor(y / 25);
+	if (tileY < 0 || tileY >= mapHeight) {
 		return 0;
 	}
-	var _loc2_ = Math.floor(x / 25);
-	_loc2_ = loopOver(_loc2_,0,mapWidth);
-	return map[_loc1_][_loc2_];
+	let tileX = Math.floor(x / 25);
+	tileX = loopOver(tileX,0,mapWidth);
+	return map[tileY][tileX];
 }
 function setBlockAt(x, y, t) {
-	var _loc1_ = Math.floor(y / 25);
-	var _loc2_;
-	if (_loc1_ >= 0 && _loc1_ < mapHeight) {
-		_loc2_ = Math.floor(x / 25);
-		_loc2_ = loopOver(_loc2_,0,mapWidth);
-		map[_loc1_][_loc2_] = t;
+	const tileY = Math.floor(y / 25);
+	if (tileY >= 0 && tileY < mapHeight) {
+		let tileX = Math.floor(x / 25);
+		tileX = loopOver(tileX,0,mapWidth);
+		map[tileY][tileX] = t;
 		if (tileProperties[t][5] > 0) {
 			blockMovieAt(x,y).getChildByLabel('main').context = tileProperties[t][5] == 1 ? textures.tiles[t] : textures.tiles[t][0];
 		} else {
@@ -709,45 +701,43 @@ function setBlockAt(x, y, t) {
 	}
 }
 function blockMovieAt(x, y) {
-	let _loc2_ = Math.floor(y / 25);
-	if (_loc2_ < 0 || _loc2_ > mapHeight) return 0;
-	let _loc3_ = Math.floor(x / 25);
-	_loc3_ = loopOver(_loc3_,0,mapWidth);
+	const tileY = Math.floor(y / 25);
+	if (tileY < 0 || tileY > mapHeight) return 0;
+	let tileX = Math.floor(x / 25);
+	tileX = loopOver(tileX,0,mapWidth);
 	return app.stage
-		.getChildByLabel(`mapPiece${Math.floor(_loc3_ / 10)},${Math.floor(_loc2_ / 10)}`)
-		.getChildByLabel(`tile${_loc3_ % 10},${_loc2_ % 10}`);
+		.getChildByLabel(`mapPiece${Math.floor(tileX / 10)},${Math.floor(tileY / 10)}`)
+		.getChildByLabel(`tile${tileX % 10},${tileY % 10}`);
 }
 function getTileY(y) {
-	let _loc2_ = Math.floor(y / 25);
-	if (_loc2_ < 0 || _loc2_ > mapHeight) return;
-	return _loc2_;
+	const tileY = Math.floor(y / 25);
+	if (tileY < 0 || tileY > mapHeight) return;
+	return tileY;
 }
 function getTileX(x) {
-	let _loc3_ = Math.floor(x / 25);
-	_loc3_ = loopOver(_loc3_, 0, mapWidth);
-	return _loc3_;
+	let tileX = Math.floor(x / 25);
+	tileX = loopOver(tileX, 0, mapWidth);
+	return tileX;
 }
 function removeBlockAt(x, y) {
-	var _loc2_ = Math.floor(y / 25);
-	if (_loc2_ < 0 || _loc2_ > mapHeight) {
-		return 0;
-	}
-	var _loc3_ = Math.floor(x / 25);
-	_loc3_ = loopOver(_loc3_,0,mapWidth);
-	map[_loc2_][_loc3_] = 0;
+	const tileY = Math.floor(y / 25);
+	if (tileY < 0 || tileY > mapHeight) return 0;
+	let tileX = Math.floor(x / 25);
+	tileX = loopOver(tileX,0,mapWidth);
+	map[tileY][tileX] = 0;
 	app.stage
-		.getChildByLabel(`mapPiece${Math.floor(_loc3_ / 10)},${Math.floor(_loc2_ / 10)}`)
-		.getChildByLabel(`tile${_loc3_ % 10},${_loc2_ % 10}`).destroy();
+		.getChildByLabel(`mapPiece${Math.floor(tileX / 10)},${Math.floor(tileY / 10)}`)
+		.getChildByLabel(`tile${tileX % 10},${tileY % 10}`).destroy();
 }
 function achget(num) {
-	var _loc2_ = swap[num];
-	if (!achievements[_loc2_]) {
+	const swappedNum = swap[num];
+	if (!achievements[swappedNum]) {
 		console.log(achievementNames[num]);
 		noAchTimerStart = getTimer();
-		drawach(_loc2_,true);
+		drawach(swappedNum,true);
 		flushAchievementList();
-		achievements[_loc2_] = true;
-		achShowing.push([_loc2_, 700 + bubbleBoxLength,lowestPossibleAch()]);
+		achievements[swappedNum] = true;
+		achShowing.push([swappedNum, 700 + bubbleBoxLength,lowestPossibleAch()]);
 
 		const bubble = new PIXI.Container({
 			parent: app.stage,
@@ -757,29 +747,25 @@ function achget(num) {
 			scale: bubblePreviewSize,
 		});
 		doBubbleText(bubble,0);
-		drawbubble(_loc2_,bubble,0,0);
+		drawbubble(swappedNum,bubble,0,0);
 		achCount++;
 	}
 }
 function lowestPossibleAch() {
-	var _loc3_ = 700 - bubbleBoxWidth / 2 * bubblePreviewSize;
-	var _loc4_ = false;
-	var _loc2_;
-	var _loc1_;
-	while (!_loc4_) {
-		_loc2_ = true;
-		_loc1_ = 0;
-		while (_loc1_ < achShowing.length) {
-			if (achShowing[_loc1_][1] > bubbleBoxLength / 2 && achShowing[_loc1_][2] == _loc3_) {
-				_loc2_ = false;
+	let y = 700 - bubbleBoxWidth / 2 * bubblePreviewSize;
+	let found = false;
+	while (!found) {
+		let thisYIsFree = true;
+		for (let i = 0; i < achShowing.length; i++) {
+			if (achShowing[i][1] > bubbleBoxLength / 2 && achShowing[i][2] == y) {
+				thisYIsFree = false;
 			}
-			_loc1_ = _loc1_ + 1;
 		}
-		if (_loc2_) {
-			_loc4_ = true;
-			return _loc3_;
+		if (thisYIsFree) {
+			found = true;
+			return y;
 		}
-		_loc3_ -= bubbleBoxWidth * bubblePreviewSize;
+		y -= bubbleBoxWidth * bubblePreviewSize;
 	}
 }
 function die() {
@@ -882,19 +868,17 @@ function getCoinAt(x, y) {
 	}
 }
 function getPortalAt(x, y) {
-	var _loc2_ = blockAt(x,y);
-	var _loc3_;
-	var _loc1_;
-	if (_loc2_ >= 100 && _loc2_ < 200) {
+	const t = blockAt(x,y);
+	if (t >= 100 && t < 200) {
 		if (portalTimer >= 15) {
 			achget(37);
 			if (ghost == 1) {
 				achget(69);
 			}
-			_loc3_ = Math.floor(_loc2_ / 2) - 50;
-			_loc1_ = _loc3_ - _loc3_ % 2 * 2 + 1;
-			p.cx = portals[Math.floor(_loc1_ / 2)][_loc1_ % 2 * 2] * 25 + 25;
-			p.cy = portals[Math.floor(_loc1_ / 2)][_loc1_ % 2 * 2 + 1] * 25 + 40;
+			const type = Math.floor(t / 2) - 50;
+			const color = type - type % 2 * 2 + 1;
+			p.cx = portals[Math.floor(color / 2)][color % 2 * 2] * 25 + 25;
+			p.cy = portals[Math.floor(color / 2)][color % 2 * 2 + 1] * 25 + 40;
 			cameraX = p.cx - 370;
 			cameraY = p.cy - 440;
 			portalTimer = 0;
@@ -952,9 +936,9 @@ function doBubbleText(bub, xoffset) {
 	});
 }
 function turnSpawnOff(x, y) {
-	const _loc1_ = setSpawnI(x,y);
-	const tileX = getTileX(x + _loc1_);
-	const tileX2 = getTileX(x + _loc1_ + 25);
+	const side = setSpawnI(x,y);
+	const tileX = getTileX(x + side);
+	const tileX2 = getTileX(x + side + 25);
 	const tileY = getTileY(y + 5);
 	if (tileFrames[tileY][tileX].cf != 0) {
 		tileFrames[tileY][tileX].update = true;
@@ -964,9 +948,9 @@ function turnSpawnOff(x, y) {
 	}
 }
 function turnSpawnOn(x, y) {
-	var _loc1_ = setSpawnI(x,y);
-	const tileX = getTileX(x + _loc1_);
-	const tileX2 = getTileX(x + _loc1_ + 25);
+	const side = setSpawnI(x,y);
+	const tileX = getTileX(x + side);
+	const tileX2 = getTileX(x + side + 25);
 	const tileY = getTileY(y + 5);
 	if (tileFrames[tileY][tileX].cf != 1) {
 		tileFrames[tileY][tileX].update = true;
@@ -974,7 +958,7 @@ function turnSpawnOn(x, y) {
 		tileFrames[tileY][tileX].cf = 1;
 		tileFrames[tileY][tileX2].cf = 1;
 	}
-	sx = Math.floor((x + _loc1_ + 25) / 25) * 25;
+	sx = Math.floor((x + side + 25) / 25) * 25;
 	sy = Math.floor(y / 25) * 25;
 }
 function setSpawnI(x, y) {
@@ -1039,23 +1023,18 @@ function paint(x, y) {
 	}
 }
 function getPColorCountInMainCanvas(color) {
-	var _loc3_ = 0;
-	var _loc2_ = 0;
-	var _loc1_;
-	while (_loc2_ < 9) {
-		_loc1_ = 0;
-		while (_loc1_ < 11) {
-			if (getSimpleColor(colorMap[_loc2_][_loc1_]) == getSimpleColor(color)) {
-				_loc3_ = _loc3_ + 1;
+	let count = 0;
+	for (let y = 0; y < 9; y++) {
+		for (let x = 0; x < 11; x++) {
+			if (getSimpleColor(colorMap[y][x]) == getSimpleColor(color)) {
+				count++;
 			}
-			if (colorMap[_loc2_][_loc1_] != pColor && colorMap[_loc2_][_loc1_] != -1) {
+			if (colorMap[y][x] != pColor && colorMap[y][x] != -1) {
 				achget(56);
 			}
-			_loc1_ = _loc1_ + 1;
 		}
-		_loc2_ = _loc2_ + 1;
 	}
-	pColorCountInMainCanvas = _loc3_;
+	pColorCountInMainCanvas = count;
 }
 function setColorWheel(m) {
 	m.getChildByLabel('colors').angle = -colorc * 360 + 90;
@@ -1091,10 +1070,10 @@ function drawPlayer() {
 		.stroke(0x000000);
 }
 function getRGB(a) {
-	const _loc4_ = Math.floor(Math.min(Math.max(2 - Math.abs(a - 0.3333333333333333) * 6,0),1) * 255);
-	const _loc1_ = Math.floor(Math.min(Math.max(2 - Math.abs(a - 0.6666666666666666) * 6,0),1) * 255);
-	const _loc3_ = Math.floor(Math.min(Math.max(Math.abs(a - 0.5) * 6 - 1,0),1) * 255);
-	return _loc3_ * 0x10000 + _loc4_ * 0x100 + _loc1_;
+	const g = Math.floor(Math.min(Math.max(2 - Math.abs(a - 0.3333333333333333) * 6,0),1) * 255);
+	const b = Math.floor(Math.min(Math.max(2 - Math.abs(a - 0.6666666666666666) * 6,0),1) * 255);
+	const r = Math.floor(Math.min(Math.max(Math.abs(a - 0.5) * 6 - 1,0),1) * 255);
+	return r * 0x10000 + g * 0x100 + b;
 }
 function getSimpleColor(i) {
 	if (i == -1) {
@@ -1124,10 +1103,10 @@ function getSimpleColor(i) {
 	return 7;
 }
 function checkFlag(x, y) {
-	var _loc1_ = blockAt(x,y);
-	if (_loc1_ >= 200 && _loc1_ < 250) {
+	const t = blockAt(x,y);
+	if (t >= 200 && t < 250) {
 		achget(67);
-		if (curCourse >= 0 && curCourse != _loc1_ - 200) {
+		if (curCourse >= 0 && curCourse != t - 200) {
 			if (completedCourses[curCourse]) {
 				setFlagColor(blockMovieAt(flags[curCourse][0] * 25,flags[curCourse][1] * 25), 0, 2);
 				setFlagColor(blockMovieAt(flags[curCourse][2] * 25,flags[curCourse][3] * 25), 1, finishFlagColors.length - 1);
@@ -1136,11 +1115,11 @@ function checkFlag(x, y) {
 				setFlagColor(blockMovieAt(flags[curCourse][2] * 25,flags[curCourse][3] * 25), 1, 0);
 			}
 		}
-		curCourse = _loc1_ - 200;
+		curCourse = t - 200;
 		setFlagColor(blockMovieAt(x, y), 0, 1);
 		setFlagColor(blockMovieAt(flags[curCourse][2] * 25,flags[curCourse][3] * 25), 1, 1);
 	}
-	if (_loc1_ == curCourse + 250) {
+	if (t == curCourse + 250) {
 		achget(66);
 		if (curCourse == 0) achget(60);
 		if (curCourse == 1) achget(61);
@@ -1174,37 +1153,32 @@ function draw() {
 	if (ghost == 1 && p.onob) {
 		achget(28);
 	}
-	var _loc3_ = 0;
-	var _loc2_;
-	while (_loc3_ < achShowing.length) {
-		_loc2_ = achCount - achShowing.length + _loc3_;
-		if (achShowing[_loc3_][1] < 0) {
-			app.stage.getChildByLabel('bubble' + _loc2_)?.destroy();
+	for (let i = 0; i < achShowing.length; i++) {
+		const num = achCount - achShowing.length + i;
+		if (achShowing[i][1] < 0) {
+			app.stage.getChildByLabel('bubble' + num)?.destroy();
 			achShowing.splice(0, 1);
 		}
-		_loc3_ = _loc3_ + 1;
 	}
-	_loc3_ = 0;
-	while (_loc3_ < achShowing.length) {
-		_loc2_ = achCount - achShowing.length + _loc3_;
-		if (achShowing[_loc3_][1] > bubbleBoxLength * bubblePreviewSize + 0.01) {
-			achShowing[_loc3_][1] -= (achShowing[_loc3_][1] - bubbleBoxLength * bubblePreviewSize) / 10;
+	for (let i = 0; i < achShowing.length; i++) {
+		const num = achCount - achShowing.length + i;
+		if (achShowing[i][1] > bubbleBoxLength * bubblePreviewSize + 0.01) {
+			achShowing[i][1] -= (achShowing[i][1] - bubbleBoxLength * bubblePreviewSize) / 10;
 		} else {
-			achShowing[_loc3_][1] -= (bubbleBoxLength * bubblePreviewSize - achShowing[_loc3_][1] + 2) / 10;
+			achShowing[i][1] -= (bubbleBoxLength * bubblePreviewSize - achShowing[i][1] + 2) / 10;
 		}
-		const bubble = app.stage.getChildByLabel('bubble' + _loc2_);
-		if (bubble) bubble.x = achShowing[_loc3_][1];
-		_loc3_ = _loc3_ + 1;
+		const bubble = app.stage.getChildByLabel('bubble' + num);
+		if (bubble) bubble.x = achShowing[i][1];
 	}
 	if (Math.abs(_xmouse - 774.5) <= 74.5 && Math.abs(_ymouse - 349.5) <= 349.5) {
 		if (oldXmouse != _xmouse || oldYmouse != _ymouse || noAchTimer == 1) {
 			_root.bubble.visible = true;
-			_loc3_ = getIndex(Math.floor((_xmouse - 700) / 15),Math.floor(_ymouse / 7));
-			drawbubble(_loc3_, _root.bubble, getYoffset(_ymouse),1);
+			const index = getIndex(Math.floor((_xmouse - 700) / 15),Math.floor(_ymouse / 7));
+			drawbubble(index, _root.bubble, getYoffset(_ymouse),1);
 			_root.bubble.x = _xmouse;
 			_root.bubble.y = _ymouse;
 			achget(20);
-			if (achievements[_loc3_]) {
+			if (achievements[index]) {
 				achget(21);
 			}
 		}
@@ -1314,10 +1288,10 @@ function draw() {
 		turnSpawnOn(p.cx,p.cy);
 	}
 	if (ghost == 0) {
-		_loc3_ = blockUnderProp(p.cx,p.cy,2);
-		if (_loc3_ > 0) {
+		const bouncy = blockUnderProp(p.cx,p.cy,2);
+		if (bouncy > 0) {
 			achget(14);
-			const tileX = getTileX(p.cx + (_loc3_ * 25 - 50));
+			const tileX = getTileX(p.cx + (bouncy * 25 - 50));
 			const tileY = getTileY(p.cy);
 			if (tileFrames[tileY][tileX]) {
 				tileFrames[tileY][tileX].cf = 1;
