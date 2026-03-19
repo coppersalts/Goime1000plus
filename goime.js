@@ -943,7 +943,7 @@ function turnSpawnOff(x, y) {
 	const tileX = getTileX(x + side);
 	const tileX2 = getTileX(x + side + 25);
 	const tileY = getTileY(y + 5);
-	if (tileFrames[tileY][tileX].cf != 0) {
+	if (tileFrames[tileY]?.[tileX] && tileFrames[tileY][tileX].cf != 0) {
 		tileFrames[tileY][tileX].update = true;
 		tileFrames[tileY][tileX2].update = true;
 		tileFrames[tileY][tileX].cf = 0;
@@ -955,7 +955,7 @@ function turnSpawnOn(x, y) {
 	const tileX = getTileX(x + side);
 	const tileX2 = getTileX(x + side + 25);
 	const tileY = getTileY(y + 5);
-	if (tileFrames[tileY][tileX].cf != 1) {
+	if (tileFrames[tileY]?.[tileX] && tileFrames[tileY][tileX].cf != 1) {
 		tileFrames[tileY][tileX].update = true;
 		tileFrames[tileY][tileX2].update = true;
 		tileFrames[tileY][tileX].cf = 1;
