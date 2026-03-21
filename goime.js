@@ -1256,7 +1256,7 @@ function draw() {
 	}
 	p.vx *= friction;
 	if (!p.onob) {
-		p.vy = Math.min(p.vy + gravity,20);
+		p.vy = Math.max(Math.min(p.vy + gravity,20), -20);
 		if (p.vy > 0) {
 			freefallTimer++;
 		}
